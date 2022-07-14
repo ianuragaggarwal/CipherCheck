@@ -7,7 +7,7 @@ PROTOCOLARRAY=(tls1 tls1_1 tls1_2 tls1_3);
 if [ -z $PROTOCOL ]; then PROTOCOL="tls1_2"; fi
 if [[ " ${PROTOCOLARRAY[*]} " =~ " ${PROTOCOL} " ]]; then VALIDPROTOCOL="true"; fi
 if [ X$VALIDPROTOCOL != X"true" ]; then echo "Protocol enter is not valid. Please select tls1, tls1_1, tls1_2, tls1_3"; exit 1; fi;
-if [ -z $SERVER ]; then echo "Server not set..exiting !!!"; exit 1; fi
+if [ -z $SERVER ]; then echo "Server not set..exiting. Usage ./CiperCheck.sh <targethost:port> [protocol]"; exit 1; fi
 PROTOCOLSPEC="${PROTOCOL^^}";
 echo "Testing server $SERVER using $PROTOCOLSPEC protocol specifier. It will take sometime to test all Ciphers. Please wait for test to complete!";
 ciphers=$(openssl ciphers 'ALL:eNULL' | sed -e 's/:/ /g')
