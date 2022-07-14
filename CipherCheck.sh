@@ -2,11 +2,14 @@
 # OpenSSL requires the port number.
 SERVER=$1
 PROTOCOL=$2
-if [ -z $PROTOCOL ]; then PROTOCOL="-tls1_2"; fi
-if [ -z $SERVER ]; then echo "Server not set..exiting !!!"; exit 1; fi
-echo "Testing server $SERVER using $PROTOCOL protocol specifier. It will take sometime to test all Ciphers. Please wait for test to complete!";
-PROTOCOLSPEC="${PROTOCOL^^}"; PROTOCOLSPEC=`echo $PROTOCOLSPEC | cut -c 2-`;
 DELAY=1
+PROTOCOLARRAY=(tls1 tls1_1 tls1_2 tls1_3);
+if [ -z $PROTOCOL ]; then PROTOCOL="tls1_2"; fi
+if [[ " ${PROTOCOLARRAY[*]} " =~ " ${PROTOCOL} " ]]; then VALIDPROTOCOL="true"; fi
+if [ X$VALIDPROTOCOL != X"true" ]; then echo "Protocol enter is not valid. Please select tls1, tls1_1, tls1_2, tls1_3"; exit 1; fi;
+if [ -z $SERVER ]; then echo "Server not set..exiting !!!"; exit 1; fi
+PROTOCOLSPEC="${PROTOCOL^^}";
+echo "Testing server $SERVER using $PROTOCOLSPEC protocol specifier. It will take sometime to test all Ciphers. Please wait for test to complete!";
 ciphers=$(openssl ciphers 'ALL:eNULL' | sed -e 's/:/ /g')
 count=`echo $ciphers | wc -w`;
 echo Obtaining cipher list from $(openssl version). Total num of Ciphers found: [$count]. Test will only print supported ciphers!
@@ -16,7 +19,7 @@ do
     echo -en Testing cipher "[$cipher] Please Wait...!\\r";
     sleep $DELAY;
     echo -en "\033[2K\\r"
-    result=$(echo -n | openssl s_client -cipher "$cipher"  -connect $SERVER $PROTOCOL 2>&1)
+    result=$(echo -n | openssl s_client -cipher "$cipher"  -connect $SERVER -$PROTOCOL 2>&1)
     if [[ "$result" =~ ":error:" ]] ; then
         error=$(echo -n $result | cut -d':' -f6)
         #echo NO \($error\)
