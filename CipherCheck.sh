@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # OpenSSL requires the port number.
+#Modified and updated by Anurag Aggarwal anurag01@gmail.com
 SERVER=$1
 PROTOCOL=$2
 DELAY=1
