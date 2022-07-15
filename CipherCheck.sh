@@ -13,11 +13,9 @@ if [ $PROTOCOL == "tls1_3" ]; then CIPHERTYPE="ciphersuites"; fi
 PROTOCOLSPEC="${PROTOCOL^^}";
 echo "Testing server $SERVER using $PROTOCOLSPEC protocol specifier. It will take sometime to test all Ciphers. Please wait for test to complete!";
 ciphers=$(openssl ciphers 'ALL:eNULL' | sed -e 's/:/ /g')
-count=`echo $ciphers | wc -w`;
-echo Obtaining cipher list from $(openssl version). Total num of Ciphers found: [$count]. Test will only print supported ciphers!
+echo Obtaining cipher list from $(openssl version). Total num of Ciphers found: [`echo $ciphers | wc -w`]. Test will only print supported ciphers!
 for cipher in ${ciphers[@]}
 do
-    echo -en "\033[2K\\r"
     echo -en Testing cipher "[$cipher] Please Wait...!\\r";
     sleep $DELAY;
     echo -en "\033[2K\\r"
