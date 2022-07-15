@@ -7,8 +7,7 @@ DELAY=1
 PROTOCOLARRAY=(tls1 tls1_1 tls1_2 tls1_3);
 CIPHERTYPE="cipher";
 if [ -z $PROTOCOL ]; then PROTOCOL="tls1_2"; fi
-if [[ " ${PROTOCOLARRAY[*]} " =~ " ${PROTOCOL} " ]]; then VALIDPROTOCOL="true"; fi
-if [ X$VALIDPROTOCOL != X"true" ]; then echo "Protocol enter is not valid. Please select tls1, tls1_1, tls1_2, tls1_3"; exit 1; fi;
+if ! [[ " ${PROTOCOLARRAY[*]} " =~ " ${PROTOCOL} " ]]; then echo "Protocol enter is not valid. Please select tls1, tls1_1, tls1_2, tls1_3"; exit 1; fi;
 if [ -z $SERVER ]; then echo "Server not set..exiting. Usage ./CiperCheck.sh <targethost:port> [protocol]"; exit 1; fi
 if [ $PROTOCOL == "tls1_3" ]; then CIPHERTYPE="ciphersuites"; fi
 PROTOCOLSPEC="${PROTOCOL^^}";
