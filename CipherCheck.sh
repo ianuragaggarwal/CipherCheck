@@ -9,12 +9,12 @@ if [ -z $PROTOCOL ]; then PROTOCOL="tls1_2"; fi
 if [[ " ${PROTOCOLARRAY[*]} " =~ " ${PROTOCOL} " ]]; then VALIDPROTOCOL="true"; fi
 if [ X$VALIDPROTOCOL != X"true" ]; then echo "Protocol enter is not valid. Please select tls1, tls1_1, tls1_2, tls1_3"; exit 1; fi;
 if [ -z $SERVER ]; then echo "Server not set..exiting. Usage ./CiperCheck.sh <targethost:port> [protocol]"; exit 1; fi
+if [ $PROTOCOL == "tls1_3" ]; then CIPHERTYPE="ciphersuites"; fi
 PROTOCOLSPEC="${PROTOCOL^^}";
 echo "Testing server $SERVER using $PROTOCOLSPEC protocol specifier. It will take sometime to test all Ciphers. Please wait for test to complete!";
 ciphers=$(openssl ciphers 'ALL:eNULL' | sed -e 's/:/ /g')
 count=`echo $ciphers | wc -w`;
 echo Obtaining cipher list from $(openssl version). Total num of Ciphers found: [$count]. Test will only print supported ciphers!
-if [ $PROTOCOL == "tls1_3" ]; then CIPHERTYPE="ciphersuites"; fi
 for cipher in ${ciphers[@]}
 do
     echo -en "\033[2K\\r"
