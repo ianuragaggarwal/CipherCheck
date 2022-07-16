@@ -1,6 +1,6 @@
 # CipherCheck
 
-CipherCheck is shell script which uses openssl to see what ciphers a target server supports.
+CipherCheck is shell script which uses openssl to see what all ciphers a target server supports.
 
 Usage <> ./CipherCheck.sh <targethost:port> [protocol]
 
