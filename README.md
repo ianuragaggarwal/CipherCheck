@@ -8,4 +8,4 @@ Protocol if not specified is taken as TLSv1.2.  Please use complete protcol spec
 
 e.g. tls1/ tls1_1/ tls1_2/ tls1_3 etc.
 
-![image](https://user-images.githubusercontent.com/109287070/178993006-dc672928-e09a-4975-9933-e9cb531c84bd.png)
+![image](https://user-images.githubusercontent.com/109287070/179355782-09529d18-9dcf-4d0e-87a8-47b0891fd519.png)
