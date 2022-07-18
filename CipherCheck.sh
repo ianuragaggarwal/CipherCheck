@@ -13,12 +13,11 @@ if [ $PROTOCOL == "tls1_3" ]; then CIPHERTYPE="ciphersuites"; fi
 PROTOCOLSPEC="${PROTOCOL^^}";
 echo "Testing server $SERVER using $PROTOCOLSPEC protocol specifier. It will take sometime to test all Ciphers. Please wait for test to complete!";
 ciphers=$(openssl ciphers 'ALL:eNULL' | sed -e 's/:/ /g')
-echo Obtaining cipher list from $(openssl version). Total num of Ciphers found: [`echo $ciphers | wc -w`]. Test will only print supported ciphers!
+Total=`echo $ciphers | wc -w`; num=1;
+echo Obtaining cipher list from $(openssl version). Total num of Ciphers found: [$Total]. Test will only print supported ciphers!
 for cipher in ${ciphers[@]}
 do
-    echo -en Testing cipher "[$cipher] Please Wait...!\\r";
-    sleep $DELAY;
-    echo -en "\033[2K\\r"
+    echo -en "\033[2K\\r"; echo -en Testing cipher " [$num/$Total]" "[$cipher] Please Wait...!\\r";
     result=$(echo -n | openssl s_client -$CIPHERTYPE "$cipher"  -connect $SERVER -$PROTOCOL 2>&1)
     if [[ "$result" =~ ":error:" ]] ; then
         error=$(echo -n $result | cut -d':' -f6)
@@ -26,11 +25,13 @@ do
     else
         #if echo $result | grep -vq "Verify return code: 0 (ok)"; then
         if echo $result | grep -qv 'Cipher is (NONE)'; then
-            echo -e Tested Ok'\t'[$PROTOCOLSPEC]' '[$cipher]
+         echo -en "\033[2K\\r"; echo -e Tested Ok'\t'[$PROTOCOLSPEC]' '[$cipher]
         #else
         #    echo UNKNOWN RESPONSE
         #    echo $result
          fi
     fi
 sleep $DELAY
+let  num=num+1;
 done
+echo -en "\033[2K\\r"; exit 0;
