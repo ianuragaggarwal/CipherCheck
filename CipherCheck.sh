@@ -1,9 +1,7 @@
 #!/usr/bin/env bash
 # OpenSSL requires the port number.
 #Modified and updated by Anurag Aggarwal anurag01@gmail.com
-SERVER=$1
-PROTOCOL=$2
-DELAY=1
+SERVER=$1;PROTOCOL=$2;DELAY=1;
 PROTOCOLARRAY=(tls1 tls1_1 tls1_2 tls1_3);
 CIPHERTYPE="cipher";
 if [ -z $PROTOCOL ]; then PROTOCOL="tls1_2"; fi
@@ -13,11 +11,11 @@ if [ $PROTOCOL == "tls1_3" ]; then CIPHERTYPE="ciphersuites"; fi
 PROTOCOLSPEC="${PROTOCOL^^}";
 echo "Testing server $SERVER using $PROTOCOLSPEC protocol specifier. It will take sometime to test all Ciphers. Please wait for test to complete!";
 ciphers=$(openssl ciphers 'ALL:eNULL' | sed -e 's/:/ /g')
-Total=`echo $ciphers | wc -w`; num=1;
+Total=`echo $ciphers | wc -w`;num=1;
 echo Obtaining cipher list from $(openssl version). Total num of Ciphers found: [$Total]. Test will only print supported ciphers!
 for cipher in ${ciphers[@]}
 do
-    echo -en "\033[2K\\r"; echo -en Testing cipher " [$num/$Total]" "[$cipher] Please Wait...!\\r";
+    echo -en Testing cipher " [$num/$Total]" "[$cipher] Please Wait...!\\r";
     result=$(echo -n | openssl s_client -$CIPHERTYPE "$cipher"  -connect $SERVER -$PROTOCOL 2>&1)
     if [[ "$result" =~ ":error:" ]] ; then
         error=$(echo -n $result | cut -d':' -f6)
@@ -33,5 +31,6 @@ do
     fi
 sleep $DELAY
 let  num=num+1;
+echo -en "\033[2K\\r";
 done
-echo -en "\033[2K\\r"; exit 0;
+echo "Test Complete..!"; exit 0
