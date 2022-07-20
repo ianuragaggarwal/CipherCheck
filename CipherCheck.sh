@@ -11,7 +11,7 @@ if [ $PROTOCOL == "tls1_3" ]; then CIPHERTYPE="ciphersuites"; fi
 openssl s_client  -connect $SERVER -$PROTOCOL -quiet 2>/dev/null; status=$?;
 if [ $status == 1 ]; then echo "Connection error...exiting. Destination is not reachable or un-supported protocol specified."; exit 1; fi;
 PROTOCOLSPEC="${PROTOCOL^^}";
-echo "Testing server $SERVER using $PROTOCOLSPEC protocol specifier. It will take sometime to test all Ciphers. Please wait for test to complete!";
+echo "Server is responding. Testing server [$SERVER] using [$PROTOCOLSPEC] protocol specifier. It will take sometime to test all Ciphers. Please wait for test to complete!";
 ciphers=$(openssl ciphers 'ALL:eNULL' | sed -e 's/:/ /g' | xargs -n1 | sort -g | xargs)
 Total=`echo $ciphers | wc -w`;num=1;
 echo Obtaining cipher list from $(openssl version). Total num of Ciphers found: [$Total]. Test will only print supported ciphers!
