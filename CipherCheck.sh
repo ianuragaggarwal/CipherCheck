@@ -8,6 +8,8 @@ if [ -z $PROTOCOL ]; then PROTOCOL="tls1_2"; fi
 if ! [[ " ${PROTOCOLARRAY[*]} " =~ " ${PROTOCOL} " ]]; then echo "Protocol enter is not valid. Please select tls1, tls1_1, tls1_2, tls1_3"; exit 1; fi;
 if [ -z $SERVER ]; then echo "Server not set..exiting. Usage ./CiperCheck.sh <targethost:port> [protocol]"; exit 1; fi
 if [ $PROTOCOL == "tls1_3" ]; then CIPHERTYPE="ciphersuites"; fi
+openssl s_client  -connect $SERVER -$PROTOCOL -quiet 2>/dev/null; status=$?;
+if [ $status == 1 ]; then echo "Connection error...exiting. Destination is not reachable or un-supported protocol specified."; exit 1; fi;
 PROTOCOLSPEC="${PROTOCOL^^}";
 echo "Testing server $SERVER using $PROTOCOLSPEC protocol specifier. It will take sometime to test all Ciphers. Please wait for test to complete!";
 ciphers=$(openssl ciphers 'ALL:eNULL' | sed -e 's/:/ /g' | xargs -n1 | sort -g | xargs)
